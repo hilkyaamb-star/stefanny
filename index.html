@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Casey ultah kah? engga jir monthversary aku inii</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --white:#ffffff;
+      --bg:#fbfbfb;
+      --gold:#d4af37;
+      --gold-soft:linear-gradient(90deg, rgba(212,175,55,0.12), rgba(245,197,66,0.08));
+      --glass: rgba(255,255,255,0.6);
+      --text:#1b1b1b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    .page{
+      min-height:100vh;display:grid;place-items:center;padding:48px;
+    }
+    .card{
+      width:100%;max-width:720px;background:var(--white);border-radius:20px;box-shadow:0 10px 30px rgba(20,20,20,0.06);padding:48px;position:relative;overflow:hidden;border:1px solid rgba(212,175,55,0.06);
+    }
+    /* gold sheen */
+    .sheen{position:absolute;inset:0;pointer-events:none;background:var(--gold-soft);mix-blend-mode:overlay;opacity:0.9}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+    .logo{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),#f7d87a);box-shadow:0 6px 18px rgba(212,175,55,0.18)}
+    .logo svg{width:30px;height:30px}
+    h1{font-family:'Playfair Display',serif;margin:0;font-size:28px;color:#0f0f0f}
+    p.lead{margin:6px 0 0;font-size:14px;color:#444}
+
+    .riddle{
+      margin-top:22px;padding:26px;border-radius:12px;background:linear-gradient(180deg,rgba(250,250,250,0.9),rgba(255,255,255,0.95));border:1px solid rgba(0,0,0,0.03);font-size:18px;line-height:1.45;
+    }
+
+    .controls{display:flex;gap:12px;margin-top:18px}
+    input.answer{
+      flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);font-size:16px;outline:none;transition:box-shadow .18s,transform .12s
+    }
+    input.answer:focus{box-shadow:0 6px 20px rgba(20,20,20,0.06);transform:translateY(-2px)}
+    button.check{
+      background:linear-gradient(180deg,var(--gold),#f7d87a);border:none;padding:0 18px;border-radius:12px;min-width:120px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(212,175,55,0.14);
+    }
+    .message{margin-top:16px;font-size:15px;min-height:22px;color:#666}
+
+    .lock-anim{width:120px;height:120px;margin:28px auto 0;display:grid;place-items:center}
+    .lock-anim svg{filter:drop-shadow(0 8px 18px rgba(0,0,0,0.08))}
+
+    .reveal{display:flex;justify-content:center;margin-top:20px}
+    .unlock-btn{display:inline-block;padding:12px 20px;border-radius:999px;font-weight:600;text-decoration:none;border:1px solid rgba(0,0,0,0.04);background:linear-gradient(90deg,rgba(212,175,55,0.12),rgba(245,197,66,0.08));}
+
+    /* subtle animation for success */
+    .success-plate{opacity:0;transform:translateY(10px);transition:all .5s ease;}
+    .success-plate.show{opacity:1;transform:translateY(0)}
+
+    /* small responsive */
+    @media (max-width:520px){.card{padding:20px}.logo{width:48px;height:48px}.riddle{font-size:16px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card" role="main" aria-labelledby="title">
+      <div class="sheen" aria-hidden="true"></div>
+      <header>
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C11.4477 2 11 2.44771 11 3V6.04289C7.16546 6.56934 4.5 9.97284 4.5 14C4.5 17.5899 7.41015 20.5 11 20.5H13C16.5899 20.5 19.5 17.5899 19.5 14C19.5 9.97284 16.8345 6.56934 13 6.04289V3C13 2.44771 12.5523 2 12 2Z" fill="white"/><path d="M9 11.5C9 9.84315 10.3431 8.5 12 8.5C13.6569 8.5 15 9.84315 15 11.5C15 13.1569 13.6569 14.5 12 14.5C10.3431 14.5 9 13.1569 9 11.5Z" fill="#fff" opacity="0.9"/></svg>
+        </div>
+        <div>
+          <h1 id="title">Golden key </h1>
+          <p class="lead">Hii Stefanny Soewito, how are u? buat buka ini kamu harus jawab pertanyaan ini dulu okayyy???</p>
+        </div>
+      </header>
+
+      <div class="riddle" id="riddle">Di Hakim-hakim 14:14 Dari yang pemakan keluar sesuatu untuk dimakan,
+dan dari yang kuat keluar sesuatu yang manis. apakah itu??? </div>
+
+      <div class="controls" role="form" aria-label="Answer form">
+        <input class="answer" id="answer" placeholder="Ketik jawabanmu..." aria-label="answer input" />
+        <button class="check" id="check">Coba cek</button>
+      </div>
+
+      <div class="message" id="message" aria-live="polite"></div>
+
+      <div class="lock-anim" aria-hidden="true">
+        <!-- simple lock svg that will 'open' on success -->
+        <svg id="lock" width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="10" width="16" height="10" rx="2" fill="white" stroke="#d4af37" stroke-width="0.9"/>
+          <path id="shackle" d="M7 10V7a5 5 0 0110 0v3" stroke="#d4af37" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="reveal">
+        <a id="unlock" class="unlock-btn success-plate" href="#" target="_blank" rel="noopener noreferrer" style="pointer-events:none;opacity:0.6">Unlock Link</a>
+      </div>
+
+      <p style="text-align:center;margin-top:18px;font-size:12px;color:#aaa">Kalau gatau dan nyerah chat aku aja hhahahahahahaha</p>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const acceptable = [
+        'madu dan singa','singa dan madu','singa dan lebah','lebah dan singa','madu dan taring','taring dan madu','singa','madu','lebah'
+      ];
+      const answerInput = document.getElementById('answer');
+      const checkBtn = document.getElementById('check');
+      const msg = document.getElementById('message');
+      const unlock = document.getElementById('unlock');
+      const shackle = document.getElementById('shackle');
+
+      function normalize(s){
+        return s.trim().toLowerCase().replace(/[.,!?"'`]/g,'');
+      }
+
+      function showWrong(){
+        msg.textContent = 'WKWKWKWKWK Bukan ituuu Meeeeeiiiii ayo ayo ayo ayo jawab lagii';
+        msg.style.color = '#7a4a00';
+        // small shake
+        const input = answerInput;
+        input.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260});
+      }
+
+      function showCorrect(){
+        msg.textContent = 'YEEEEEAAAAAYYYYYYY KEBUKAAAAA SELAMAT YAAA CONGRATULATIONS';
+        msg.style.color = '#2a2a2a';
+        // animate shackle "open"
+        shackle.animate([{d: 'M7 10V7a5 5 0 0110 0v3'},{d: 'M7 10V5a5 5 0 0110 0v5'}],{duration:700,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'});
+        // reveal button
+        unlock.href = 'https://docs.google.com/document/d/1n77_B_2Ys9ZVHu1ayultI9JH-fSZ9uoWI4of9HOp71M/edit?usp=sharing';
+        unlock.style.pointerEvents = 'auto';
+        unlock.style.opacity = '1';
+        unlock.classList.add('show');
+        // add success plate animation class
+        document.querySelector('.success-plate').classList.add('show');
+      }
+
+      function handle(){
+        const val = normalize(answerInput.value);
+        if(!val){ msg.textContent = 'Masukin dulu jawabannya Huneyyy'; return; }
+        if(acceptable.includes(val)){
+          showCorrect();
+        } else {
+          showWrong();
+        }
+      }
+
+      checkBtn.addEventListener('click',handle);
+      answerInput.addEventListener('keydown',function(e){ if(e.key === 'Enter') handle(); });
+
+      // small autofocus
+      setTimeout(()=>answerInput.focus(),400);
+    })();
+  </script>
+</body>
+</html>
